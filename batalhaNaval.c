@@ -1,40 +1,113 @@
 #include <stdio.h>
 
-// Desafio Batalha Naval - MateCheck
-// Este código inicial serve como base para o desenvolvimento do sistema de Batalha Naval.
-// Siga os comentários para implementar cada parte do desafio.
+#define TAM 10
+#define NAVIO 3
 
-int main() {
-    // Nível Novato - Posicionamento dos Navios
-    // Sugestão: Declare uma matriz bidimensional para representar o tabuleiro (Ex: int tabuleiro[5][5];).
-    // Sugestão: Posicione dois navios no tabuleiro, um verticalmente e outro horizontalmente.
-    // Sugestão: Utilize `printf` para exibir as coordenadas de cada parte dos navios.
+void exibirTabuleiro(int tabuleiro[TAM][TAM])
+{
+    printf("  ");
+    for (int c = 0; c < TAM; c++)
+    {
+        printf(" %d ", c);
+    }
+    printf("\n");
 
-    // Nível Aventureiro - Expansão do Tabuleiro e Posicionamento Diagonal
-    // Sugestão: Expanda o tabuleiro para uma matriz 10x10.
-    // Sugestão: Posicione quatro navios no tabuleiro, incluindo dois na diagonal.
-    // Sugestão: Exiba o tabuleiro completo no console, mostrando 0 para posições vazias e 3 para posições ocupadas.
+    for (int i = 0; i < TAM; i++)
+    {
+        printf("%2d ", i);
+        for (int j = 0; j < TAM; j++)
+        {
+            if (tabuleiro[i][j] == 0)
+                printf(" 0 ");
+            else
+                printf(" 3 ");
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
 
-    // Nível Mestre - Habilidades Especiais com Matrizes
-    // Sugestão: Crie matrizes para representar habilidades especiais como cone, cruz, e octaedro.
-    // Sugestão: Utilize estruturas de repetição aninhadas para preencher as áreas afetadas por essas habilidades no tabuleiro.
-    // Sugestão: Exiba o tabuleiro com as áreas afetadas, utilizando 0 para áreas não afetadas e 1 para áreas atingidas.
+int posicionarHorizontal(int tabuleiro[TAM][TAM], int linha, int coluna)
+{
+    if (linha < 0 || linha >= TAM || coluna < 0 || coluna + NAVIO > TAM)
+    {
+        printf("Erro: Navio horizontal fora dos limites!\n");
+        return 0;
+    }
+    for (int j = coluna; j < coluna + NAVIO; j++)
+    {
+        if (tabuleiro[linha][j] != 0)
+        {
+            printf("Erro: Sobreposição no navio horizontal!\n");
+            return 0;
+        }
+    }
+    for (int j = coluna; j < coluna + NAVIO; j++)
+    {
+        tabuleiro[linha][j] = 3;
+    }
+    return 1;
+}
 
-    // Exemplos de exibição das habilidades:
-    // Exemplo para habilidade em cone:
-    // 0 0 1 0 0
-    // 0 1 1 1 0
-    // 1 1 1 1 1
-    
-    // Exemplo para habilidade em octaedro:
-    // 0 0 1 0 0
-    // 0 1 1 1 0
-    // 0 0 1 0 0
+int posicionarVertical(int tabuleiro[TAM][TAM], int linha, int coluna)
+{
+    if (linha < 0 || linha + NAVIO > TAM || coluna < 0 || coluna >= TAM)
+    {
+        printf("Erro: Navio vertical fora dos limites!\n");
+        return 0;
+    }
+    for (int i = linha; i < linha + NAVIO; i++)
+    {
+        if (tabuleiro[i][coluna] != 0)
+        {
+            printf("Erro: Sobreposição no navio vertical!\n");
+            return 0;
+        }
+    }
+    for (int i = linha; i < linha + NAVIO; i++)
+    {
+        tabuleiro[i][coluna] = 3;
+    }
+    return 1;
+}
 
-    // Exemplo para habilidade em cruz:
-    // 0 0 1 0 0
-    // 1 1 1 1 1
-    // 0 0 1 0 0
+int main()
+{
+    int tabuleiro[TAM][TAM];
+
+    for (int i = 0; i < TAM; i++)
+    {
+        for (int j = 0; j < TAM; j++)
+        {
+            tabuleiro[i][j] = 0;
+        }
+    }
+
+    printf("=== BATALHA NAVAL - Posicionando Navios ===\n\n");
+
+    int linhaH = 2, colunaH = 3;
+    int linhaV = 5, colunaV = 7;
+
+    printf("Posicionando navio HORIZONTAL em (%d, %d) -> (%d, %d)\n",
+           linhaH, colunaH, linhaH, colunaH + NAVIO - 1);
+    printf("Posicionando navio VERTICAL em (%d, %d) -> (%d, %d)\n\n",
+           linhaV, colunaV, linhaV + NAVIO - 1, colunaV);
+
+    int sucesso = 1;
+    sucesso &= posicionarHorizontal(tabuleiro, linhaH, colunaH);
+    sucesso &= posicionarVertical(tabuleiro, linhaV, colunaV);
+
+    if (!sucesso)
+    {
+        printf("Falha ao posicionar os navios. Verifique as coordenadas.\n");
+        return 1;
+    }
+
+    printf("Tabuleiro com os navios posicionados:\n");
+    exibirTabuleiro(tabuleiro);
+
+    printf("Dois navios de tamanho %d posicionados com sucesso!\n", NAVIO);
+    printf("Legenda: 0 = agua, 3 = navio\n");
 
     return 0;
 }
